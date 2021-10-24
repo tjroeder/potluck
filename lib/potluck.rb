@@ -15,7 +15,11 @@ class Potluck
   end
 
   def menu
-    @dishes.sort_by(&:name).group_by(&:category).transform_keys! { |category| (category.to_s + 's').to_sym }.transform_values! { |dish| dish.map(&:name) }
+    @dishes.sort_by!(&:name)
+    menu_hash = @dishes.each_with_object({}) do |dish, hash|
+      hash[(dish.category.to_s + 's').to_sym] ||= []
+      hash[(dish.category.to_s + 's').to_sym] << dish.name
+    end
   end
 
   def ratio(sel_category)
